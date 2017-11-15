@@ -1,0 +1,25 @@
+version: '3'
+services:
+  node:
+    build: .
+    image: 'desafio-voxus:latest'
+    restart: always
+    volumes:
+      - '.:${APP_DIRECTORY}'
+      - '${APP_DIRECTORY}/node_modules'
+    ports:
+      - '${NODE_LOCAL_PORT}:${NODE_CONTAINER_PORT}'
+    command: npm start
+    environment:
+      - 'NODE_PORT=${NODE_CONTAINER_PORT}'
+      - 'MONGO_PORT=${MONGO_CONTAINER_PORT}'
+      - 'DB_NAME=${DB_NAME}'
+      - 'AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}'
+      - 'AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - '${MONGO_LOCAL_PORT}:${MONGO_CONTAINER_PORT}'
+    restart: on-failure
